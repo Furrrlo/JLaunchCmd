@@ -22,7 +22,7 @@ class WinCommandLineSplitterTest {
         assertArrayEquals(
                 expected,
                 actual = WinCommandLineSplitter.doSplitCommand(cmd),
-                String.format("Split wrong (command: '%s',\nexpected:\t'%s',\nactual:\t\t'%s' )", cmd, Arrays.toString(expected), Arrays.toString(actual)));
+                String.format("Split wrong (command: '%s',\nexpected:\t'%s',\nactual:\t\t'%s'\n)", cmd, Arrays.toString(expected), Arrays.toString(actual)));
     }
 
     @ParameterizedTest
@@ -37,7 +37,7 @@ class WinCommandLineSplitterTest {
         assertArrayEquals(
                 expected = new WinJnaCommandLineSplitter().splitCommand(cmd),
                 actual = WinCommandLineSplitter.doSplitCommand(cmd),
-                String.format("Split wrong (command: '%s',\nexpected:\t'%s',\nactual:\t\t'%s' )", cmd, Arrays.toString(expected), Arrays.toString(actual)));
+                String.format("Split wrong (command: '%s',\nexpected:\t'%s',\nactual:\t\t'%s'\n)", cmd, Arrays.toString(expected), Arrays.toString(actual)));
     }
 
     private static Stream<Arguments> provideCommands() {

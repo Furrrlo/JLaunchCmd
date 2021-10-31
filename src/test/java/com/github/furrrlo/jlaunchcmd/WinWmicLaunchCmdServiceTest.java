@@ -26,6 +26,6 @@ class WinWmicLaunchCmdServiceTest {
         assertArrayEquals(
                 expected,
                 actual = new WinWmicLaunchCmdService().tryGetLaunchCommand(),
-                String.format("Command line differs (expected:\t%s, actual:\t\t%s)", Arrays.toString(expected), Arrays.toString(actual)));
+                String.format("Command line differs (\nexpected:\t%s, \nactual:\t\t%s\n)", Arrays.toString(expected), Arrays.toString(actual)));
     }
 }
