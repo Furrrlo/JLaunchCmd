@@ -3,6 +3,8 @@ package com.github.furrrlo.jlaunchcmd;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class JLaunchCmdTest {
@@ -14,16 +16,17 @@ class JLaunchCmdTest {
 
     @Test
     void getLaunchCommand() {
-        assertDoesNotThrow(() -> JLaunchCmd.create().getLaunchCommand());
+        System.out.println(Arrays.toString(
+                assertDoesNotThrow(() -> JLaunchCmd.create().getLaunchCommand())));
     }
 
     @Test
     void getExecutable() {
-        assertDoesNotThrow(() -> JLaunchCmd.create().getExecutable());
+        System.out.println(assertDoesNotThrow(() -> JLaunchCmd.create().getExecutable()));
     }
 
     @Test
     void getArguments() {
-        assertDoesNotThrow(() -> JLaunchCmd.create().getArguments());
+        System.out.println(Arrays.toString(assertDoesNotThrow(() -> JLaunchCmd.create().getArguments())));
     }
 }
