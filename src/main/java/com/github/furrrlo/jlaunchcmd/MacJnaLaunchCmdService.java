@@ -4,7 +4,6 @@ import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
 import com.sun.jna.Pointer;
-import com.sun.jna.platform.linux.ErrNo;
 import com.sun.jna.platform.unix.LibCAPI;
 import com.sun.jna.ptr.IntByReference;
 
@@ -64,17 +63,18 @@ class MacJnaLaunchCmdService implements JLaunchCmdService {
         final int nArgs = args.getInt(0);
         final String[] cmd = new String[nArgs];
 
-        Pointer currArg = args.share(SystemB.INT_SIZE);
+        long currOffset = SystemB.INT_SIZE;
         for(int i = 0; i < nArgs; i++) {
-            if(Pointer.nativeValue(currArg) >= Pointer.nativeValue(args) + maxArgs.getValue())
+            if(currOffset >= maxArgs.getValue())
                 throw new IndexOutOfBoundsException(String.format(
-                        "Returned process args went over maxArgs (currArg: %d, maxArg: %d, nArgs: %d, index: %d)",
-                        Pointer.nativeValue(currArg),
-                        Pointer.nativeValue(args) + maxArgs.getValue(),
+                        "Returned process args went over maxArgs (currOffset: %d, maxArgs: %d, nArgs: %d, index: %d)",
+                        currOffset, maxArgs.getValue(),
                         nArgs, i));
 
-            cmd[i] = currArg.getString(0);
-            currArg = currArg.share(SystemB.INSTANCE.strlen(currArg));
+            while(args.getByte(currOffset) == 0x0)
+                currOffset++;
+            cmd[i] = args.getString(currOffset);
+            currOffset += SystemB.INSTANCE.strlen(args.share(currOffset));
         }
 
         return cmd;
