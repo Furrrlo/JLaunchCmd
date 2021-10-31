@@ -4,6 +4,7 @@ import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
 import com.sun.jna.Pointer;
+import com.sun.jna.platform.linux.ErrNo;
 import com.sun.jna.platform.unix.LibCAPI;
 import com.sun.jna.ptr.IntByReference;
 
@@ -48,7 +49,7 @@ class MacJnaLaunchCmdService implements JLaunchCmdService {
         final IntByReference maxArgs = new IntByReference();
         if (SystemB.INSTANCE.sysctl(
                 new int[] { CTL_KERN, KERN_ARGMAX }, 2,
-                maxArgs.getPointer(), new LibCAPI.size_t.ByReference(2),
+                maxArgs.getPointer(), new LibCAPI.size_t.ByReference(SystemB.INT_SIZE),
                 null, new LibCAPI.size_t(0)) < 0)
             throw perror("sysctl(KERN_ARGMAX) failed");
 
@@ -60,15 +61,17 @@ class MacJnaLaunchCmdService implements JLaunchCmdService {
                 null, new LibCAPI.size_t(0)) < 0)
             throw perror("sysctl(KERN_PROCARGS2) failed");
 
-        final Pointer argsEnd = args.getPointer(maxArgs.getValue());
         final int nArgs = args.getInt(0);
-
         final String[] cmd = new String[nArgs];
 
-        Pointer currArg = args.getPointer(2);
+        Pointer currArg = args.getPointer(SystemB.INT_SIZE);
         for(int i = 0; i < nArgs; i++) {
-            if(Pointer.nativeValue(currArg) > Pointer.nativeValue(argsEnd))
-                throw new IndexOutOfBoundsException("Returned process args went over maxArgs");
+            if(Pointer.nativeValue(currArg) >= Pointer.nativeValue(args) + maxArgs.getValue())
+                throw new IndexOutOfBoundsException(String.format(
+                        "Returned process args went over maxArgs (currArg: %d, maxArg: %d, nArgs: %d, index: %d)",
+                        Pointer.nativeValue(currArg),
+                        Pointer.nativeValue(args) + maxArgs.getValue(),
+                        nArgs, i));
 
             cmd[i] = currArg.getString(0);
             currArg = currArg.getPointer(SystemB.INSTANCE.strlen(currArg));
