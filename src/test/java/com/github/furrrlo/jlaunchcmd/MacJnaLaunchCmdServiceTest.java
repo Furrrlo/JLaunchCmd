@@ -14,6 +14,8 @@ class MacJnaLaunchCmdServiceTest {
     @Test
     @EnabledOnOs({ OS.MAC })
     void jnaWorking() {
+        assumeTrue(Boolean.getBoolean("junit.jna"), "Missing JNA");
+
         final MacJnaLaunchCmdService.Provider provider = new MacJnaLaunchCmdService.Provider();
         assertTrue(provider.isSupported(), "Service is not supported");
 

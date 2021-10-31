@@ -1,5 +1,6 @@
 package com.github.furrrlo.jlaunchcmd;
 
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assumptions.*;
 
 class WinCommandLineSplitterTest {
 
@@ -29,6 +31,8 @@ class WinCommandLineSplitterTest {
     // as the provideCommands method is generated using data from here
     @EnabledOnOs({ OS.WINDOWS })
     void splitTheSameWay(String cmd) {
+        assumeTrue(Boolean.getBoolean("junit.jna"), "Missing JNA");
+
         String[] expected, actual;
         assertArrayEquals(
                 expected = new WinJnaCommandLineSplitter().splitCommand(cmd),

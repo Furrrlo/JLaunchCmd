@@ -45,10 +45,11 @@ dependencies {
 //    "moduleCompileOnly"(sourceSets.main.map { it.output })
 
     val jna = "5.9.0"
+    val jnaTestConfiguration = if(project.hasProperty("noJnaInTests")) "testCompileOnly" else "testImplementation"
     compileOnly("net.java.dev.jna:jna-jpms:$jna")
-    testImplementation("net.java.dev.jna:jna-jpms:$jna")
+    jnaTestConfiguration("net.java.dev.jna:jna-jpms:$jna")
     compileOnly("net.java.dev.jna:jna-platform-jpms:$jna")
-    testImplementation("net.java.dev.jna:jna-platform-jpms:$jna")
+    jnaTestConfiguration("net.java.dev.jna:jna-platform-jpms:$jna")
 
     val junit = "5.8.1"
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junit")
@@ -58,4 +59,5 @@ dependencies {
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+    systemProperty("junit.jna", !project.hasProperty("noJnaInTests"))
 }

@@ -1,19 +1,21 @@
 package com.github.furrrlo.jlaunchcmd;
 
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class JnaPidProviderTest {
 
     @Test
     void sameAsJavaProcessHandlePid() {
+        assumeTrue(Boolean.getBoolean("junit.jna"), "Missing JNA");
+
         long pid;
         try {
             pid = new PidProviderImpl().getPidWithJavaApi();
         } catch (Throwable t) {
-            Assumptions.assumeTrue(false, "PidProviderImpl#getPidWithJavaApi() failed");
+            assumeTrue(false, "PidProviderImpl#getPidWithJavaApi() failed");
             return;
         }
 
