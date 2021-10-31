@@ -64,7 +64,7 @@ class MacJnaLaunchCmdService implements JLaunchCmdService {
         final int nArgs = args.getInt(0);
         final String[] cmd = new String[nArgs];
 
-        Pointer currArg = args.getPointer(SystemB.INT_SIZE);
+        Pointer currArg = args.share(SystemB.INT_SIZE);
         for(int i = 0; i < nArgs; i++) {
             if(Pointer.nativeValue(currArg) >= Pointer.nativeValue(args) + maxArgs.getValue())
                 throw new IndexOutOfBoundsException(String.format(
@@ -74,7 +74,7 @@ class MacJnaLaunchCmdService implements JLaunchCmdService {
                         nArgs, i));
 
             cmd[i] = currArg.getString(0);
-            currArg = currArg.getPointer(SystemB.INSTANCE.strlen(currArg));
+            currArg = currArg.share(SystemB.INSTANCE.strlen(currArg));
         }
 
         return cmd;
