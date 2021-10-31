@@ -50,7 +50,7 @@ class MacJnaLaunchCmdService implements JLaunchCmdService {
                 new int[] { CTL_KERN, KERN_ARGMAX }, 2,
                 maxArgs.getPointer(), new LibCAPI.size_t.ByReference(2),
                 null, new LibCAPI.size_t(0)) < 0)
-            throw new Exception("sysctl(KERN_ARGMAX) failed");
+            throw perror("sysctl(KERN_ARGMAX) failed");
 
         final long pid = pidProvider.getPid();
         final Memory args = new Memory(maxArgs.getValue());
@@ -58,7 +58,7 @@ class MacJnaLaunchCmdService implements JLaunchCmdService {
                 new int[] { CTL_KERN, KERN_PROCARGS2, (int) pid }, 3,
                 args, new LibCAPI.size_t.ByReference(maxArgs.getValue()),
                 null, new LibCAPI.size_t(0)) < 0)
-            throw new Exception("sysctl(KERN_PROCARGS2) failed");
+            throw perror("sysctl(KERN_PROCARGS2) failed");
 
         final Pointer argsEnd = args.getPointer(maxArgs.getValue());
         final int nArgs = args.getInt(0);
@@ -77,9 +77,16 @@ class MacJnaLaunchCmdService implements JLaunchCmdService {
         return cmd;
     }
 
+    private Exception perror(String s) throws Exception {
+        int errno = Native.getLastError();
+        throw new Exception(s + ": " + SystemB.INSTANCE.strerror(errno) + " (" + errno + ")");
+    }
+
     private interface SystemB extends com.sun.jna.platform.mac.SystemB {
 
         SystemB INSTANCE = Native.load("System", SystemB.class);
+
+        String strerror(int errnum);
 
         int strlen(Pointer pointer);
     }
