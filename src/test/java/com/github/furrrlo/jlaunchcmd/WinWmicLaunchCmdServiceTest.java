@@ -8,6 +8,7 @@ import org.junit.jupiter.api.condition.OS;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class WinWmicLaunchCmdServiceTest {
 
@@ -18,7 +19,7 @@ class WinWmicLaunchCmdServiceTest {
         try {
             expected = new WinJnaLaunchCmdService().tryGetLaunchCommand();
         } catch (Throwable t) {
-            Assumptions.assumeTrue(false, "Failed to get commandLine from Win32");
+            assumeTrue(false, "Failed to get commandLine from Win32");
             return;
         }
 

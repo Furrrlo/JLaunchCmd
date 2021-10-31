@@ -8,6 +8,7 @@ import org.junit.jupiter.api.condition.OS;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class NixProcSelfLaunchCmdServiceTest {
 
@@ -18,7 +19,7 @@ class NixProcSelfLaunchCmdServiceTest {
         try {
             expected = new JavaProcessHandleLaunchCmdService().tryGetLaunchCommand();
         } catch (Throwable t) {
-            Assumptions.assumeTrue(false, "Failed to get commandLine from Win32");
+            assumeTrue(false, "Failed to get commandLine from Java ProcessHandle API");
             return;
         }
 

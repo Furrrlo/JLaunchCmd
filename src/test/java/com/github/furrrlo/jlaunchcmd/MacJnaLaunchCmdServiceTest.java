@@ -8,6 +8,7 @@ import org.junit.jupiter.api.condition.OS;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class MacJnaLaunchCmdServiceTest {
 
@@ -31,9 +32,15 @@ class MacJnaLaunchCmdServiceTest {
         final String[] expected, actual;
         try {
             expected = new JavaProcessHandleLaunchCmdService().tryGetLaunchCommand();
+        } catch (Throwable t) {
+            assumeTrue(false, "Failed to get commandLine from Java ProcessHandle API");
+            return;
+        }
+
+        try {
             actual = new MacJnaLaunchCmdService().tryGetLaunchCommand();
         } catch (Throwable t) {
-            Assumptions.assumeTrue(false, "Failed to get commandLine from Win32");
+            assumeTrue(false, "Failed to get commandLine from MacOs sysctl");
             return;
         }
 
