@@ -20,10 +20,21 @@ jobs:
         with:
           name: windows-java8-test-report
           path: build/reports
-      - name: Run Gradle tests with JNA
-        run: ./gradlew clean test
-        if: ${{ always() }}
-      - name: Upload test report with JNA
+
+  test-java8-jna-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+      - name: Run Gradle tests
+        run: ./gradlew test
+      - name: Upload test report
         uses: actions/upload-artifact@v2
         if: ${{ always() }}
         with:
@@ -49,10 +60,21 @@ jobs:
         with:
           name: windows-java11-test-report
           path: build/reports
-      - name: Run Gradle tests with JNA
-        run: ./gradlew clean test
-        if: ${{ always() }}
-      - name: Upload test report with JNA
+
+  test-java11-jna-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+      - name: Run Gradle tests
+        run: ./gradlew test
+      - name: Upload test report
         uses: actions/upload-artifact@v2
         if: ${{ always() }}
         with:
@@ -78,10 +100,21 @@ jobs:
         with:
           name: macos-java8-test-report
           path: build/reports
-      - name: Run Gradle tests with JNA
-        run: ./gradlew clean test
-        if: ${{ always() }}
-      - name: Upload test report with JNA
+
+  test-java8-jna-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+      - name: Run Gradle tests
+        run: ./gradlew test
+      - name: Upload test report
         uses: actions/upload-artifact@v2
         if: ${{ always() }}
         with:
@@ -107,10 +140,21 @@ jobs:
         with:
           name: macos-java11-test-report
           path: build/reports
-      - name: Run Gradle tests with JNA
-        run: ./gradlew clean test
-        if: ${{ always() }}
-      - name: Upload test report with JNA
+
+  test-java11-jna-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+      - name: Run Gradle tests
+        run: ./gradlew test
+      - name: Upload test report
         uses: actions/upload-artifact@v2
         if: ${{ always() }}
         with:
@@ -136,10 +180,21 @@ jobs:
         with:
           name: ubuntu-java8-test-report
           path: build/reports
-      - name: Run Gradle tests with JNA
-        run: ./gradlew clean test
-        if: ${{ always() }}
-      - name: Upload test report with JNA
+
+  test-java8-jna-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+      - name: Run Gradle tests
+        run: ./gradlew test
+      - name: Upload test report
         uses: actions/upload-artifact@v2
         if: ${{ always() }}
         with:
@@ -165,10 +220,21 @@ jobs:
         with:
           name: ubuntu-java11-test-report
           path: build/reports
-      - name: Run Gradle tests with JNA
-        run: ./gradlew clean test
-        if: ${{ always() }}
-      - name: Upload test report with JNA
+
+  test-java11-jna-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+      - name: Run Gradle tests
+        run: ./gradlew test
+      - name: Upload test report
         uses: actions/upload-artifact@v2
         if: ${{ always() }}
         with:
