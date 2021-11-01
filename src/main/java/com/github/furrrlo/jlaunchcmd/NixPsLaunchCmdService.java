@@ -7,30 +7,31 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
-class MacPsLaunchCmdService implements JLaunchCmdService {
+class NixPsLaunchCmdService implements JLaunchCmdService {
 
     static class Provider implements JLaunchCmdService.Provider {
 
         @Override
         public boolean isSupported() {
-            final String osName = System.getProperty("os.name").toLowerCase();
-            return osName.contains("mac") || osName.contains("darwin");
+            // Too many *nix platforms, I'm lazy
+            // Just try on anything that isn't windows
+            return !System.getProperty("os.name").toLowerCase().contains("win");
         }
 
         @Override
         public JLaunchCmdService create() {
-            return new MacPsLaunchCmdService();
+            return new NixPsLaunchCmdService();
         }
     }
 
     private final PidProvider pidProvider;
     private final CommandLineSplitter commandLineSplitter;
 
-    public MacPsLaunchCmdService() {
+    public NixPsLaunchCmdService() {
         this(PidProvider.INSTANCE, CommandLineSplitter.INSTANCE);
     }
 
-    public MacPsLaunchCmdService(PidProvider pidProvider, CommandLineSplitter commandLineSplitter) {
+    public NixPsLaunchCmdService(PidProvider pidProvider, CommandLineSplitter commandLineSplitter) {
         this.pidProvider = pidProvider;
         this.commandLineSplitter = commandLineSplitter;
     }
@@ -41,7 +42,6 @@ class MacPsLaunchCmdService implements JLaunchCmdService {
 
         final String output;
         try {
-            // See https://stackoverflow.com/a/14143925
             final String cmd = "ps -a -o command= -p " + pid;
             final Process process = Runtime.getRuntime().exec(cmd);
 

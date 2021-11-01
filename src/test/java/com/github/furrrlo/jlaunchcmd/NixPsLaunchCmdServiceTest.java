@@ -9,10 +9,10 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-class MacPsLaunchCmdServiceTest {
+class NixPsLaunchCmdServiceTest {
 
     @Test
-    @EnabledOnOs({ OS.MAC })
+    @EnabledOnOs({ OS.MAC, OS.LINUX })
     void sameAsJavaProcessHandle() throws Exception {
         final String[] expected, actual;
         try {
@@ -24,7 +24,7 @@ class MacPsLaunchCmdServiceTest {
 
         assertArrayEquals(
                 expected,
-                actual = new MacPsLaunchCmdService().tryGetLaunchCommand(),
+                actual = new NixPsLaunchCmdService().tryGetLaunchCommand(),
                 String.format("Command line differs (\nexpected:\t%s, \nactual:\t\t%s\n)", Arrays.toString(expected), Arrays.toString(actual)));
     }
 }
