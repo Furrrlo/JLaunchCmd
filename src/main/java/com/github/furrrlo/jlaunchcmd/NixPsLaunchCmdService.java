@@ -55,6 +55,8 @@ class NixPsLaunchCmdService implements JLaunchCmdService {
             throw new IOException("ps not available", ex);
         }
 
+        // TODO: the returned value seems to be split and then re-joined together with spaces
+        //       so it can't be split correctly, except maybe in simple cases
         return commandLineSplitter.splitCommand(output);
     }
 }
