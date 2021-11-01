@@ -12,7 +12,6 @@ class NixCommandLineSplitter implements CommandLineSplitter {
 
     @Override
     public String[] splitCommand(String cmd) {
-        // TODO: use wordexp with jna https://man7.org/linux/man-pages/man3/wordexp.3.html
         return bashSplitCommand(cmd);
     }
 
