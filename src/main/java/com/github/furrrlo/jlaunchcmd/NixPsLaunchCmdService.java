@@ -25,15 +25,13 @@ class NixPsLaunchCmdService implements JLaunchCmdService {
     }
 
     private final PidProvider pidProvider;
-    private final CommandLineSplitter commandLineSplitter;
 
     public NixPsLaunchCmdService() {
-        this(PidProvider.INSTANCE, CommandLineSplitter.INSTANCE);
+        this(PidProvider.INSTANCE);
     }
 
-    public NixPsLaunchCmdService(PidProvider pidProvider, CommandLineSplitter commandLineSplitter) {
+    public NixPsLaunchCmdService(PidProvider pidProvider) {
         this.pidProvider = pidProvider;
-        this.commandLineSplitter = commandLineSplitter;
     }
 
     @Override
@@ -57,6 +55,7 @@ class NixPsLaunchCmdService implements JLaunchCmdService {
 
         // TODO: the returned value seems to be split and then re-joined together with spaces
         //       so it can't be split correctly, except maybe in simple cases
-        return commandLineSplitter.splitCommand(output);
+        //       See https://gitlab.com/procps-ng/procps/-/blob/ad51fef1aaaaf6e059dfd62e8778318ed59000de/proc/readproc.c#L867
+        return output.split(" ");
     }
 }
