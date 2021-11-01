@@ -10,7 +10,9 @@ class NixProcSelfLaunchCmdService implements JLaunchCmdService {
 
         @Override
         public boolean isSupported() {
-            return true; // Too many *nix platforms, I'm lazy
+            // Too many *nix platforms, I'm lazy
+            // Just try on anything that isn't windows
+            return !System.getProperty("os.name").toLowerCase().contains("win");
         }
 
         @Override
