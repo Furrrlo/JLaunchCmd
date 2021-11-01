@@ -43,8 +43,37 @@ class MacJnaLaunchCmdService implements JLaunchCmdService {
     }
 
     @Override
-    public String[] tryGetLaunchCommand() throws Exception {
+    public String tryGetExecutable() throws Exception {
+        return getArgs().getString(SystemB.INT_SIZE);
+    }
 
+    @Override
+    public String[] tryGetLaunchCommand() throws Exception {
+        final Memory args = getArgs();
+
+        final int nArgs = args.getInt(0);
+        final String[] cmd = new String[nArgs];
+
+        long currOffset = SystemB.INT_SIZE; // Skip nArgs
+        currOffset += SystemB.INSTANCE.strlen(args.share(currOffset)); // Skip executable
+        // Parse command line
+        for(int i = 0; i < nArgs; i++) {
+            if(currOffset >= args.size())
+                throw new IndexOutOfBoundsException(String.format(
+                        "Returned process args went over maxArgs (currOffset: %d, maxArgs: %d, nArgs: %d, index: %d)",
+                        currOffset, args.size(),
+                        nArgs, i));
+
+            while(args.getByte(currOffset) == 0x0)
+                currOffset++;
+            cmd[i] = args.getString(currOffset);
+            currOffset += SystemB.INSTANCE.strlen(args.share(currOffset));
+        }
+
+        return cmd;
+    }
+
+    private Memory getArgs() throws Exception {
         final IntByReference maxArgs = new IntByReference();
         if (SystemB.INSTANCE.sysctl(
                 new int[] { CTL_KERN, KERN_ARGMAX }, 2,
@@ -60,24 +89,7 @@ class MacJnaLaunchCmdService implements JLaunchCmdService {
                 null, new LibCAPI.size_t(0)) < 0)
             throw perror("sysctl(KERN_PROCARGS2) failed");
 
-        final int nArgs = args.getInt(0);
-        final String[] cmd = new String[nArgs];
-
-        long currOffset = SystemB.INT_SIZE;
-        for(int i = 0; i < nArgs; i++) {
-            if(currOffset >= maxArgs.getValue())
-                throw new IndexOutOfBoundsException(String.format(
-                        "Returned process args went over maxArgs (currOffset: %d, maxArgs: %d, nArgs: %d, index: %d)",
-                        currOffset, maxArgs.getValue(),
-                        nArgs, i));
-
-            while(args.getByte(currOffset) == 0x0)
-                currOffset++;
-            cmd[i] = args.getString(currOffset);
-            currOffset += SystemB.INSTANCE.strlen(args.share(currOffset));
-        }
-
-        return cmd;
+        return args;
     }
 
     private Exception perror(String s) throws Exception {
