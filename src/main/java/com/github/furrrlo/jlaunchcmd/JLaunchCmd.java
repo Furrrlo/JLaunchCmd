@@ -24,6 +24,7 @@ public interface JLaunchCmd {
                                 new WinJnaLaunchCmdService.Provider(), // Windows Win32 API
                                 new WinWmicLaunchCmdService.Provider(), // Windows wmic.exe
                                 new MacJnaLaunchCmdService.Provider(), // Mac OS sysctl
+                                new MacPsLaunchCmdService.Provider(), // Mac OS ps
                                 new NixProcSelfLaunchCmdService.Provider(), // Unix /proc
                                 // Absolute last hope, if we get here we are desperate
                                 useHandCrafterFallback ?
