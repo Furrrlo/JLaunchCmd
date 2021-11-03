@@ -60,7 +60,10 @@ class MacSysctlLaunchCommandService implements JLaunchCmdService {
             final String cmd = "sysctl -b kern.proc.all";
             final Process process = Runtime.getRuntime().exec(cmd);
 
-            procAll = ByteBuffer.wrap(readAllBytes(process.getInputStream()));
+            final byte[] bytes = readAllBytes(process.getInputStream());
+            procAll = ByteBuffer.wrap(bytes);
+            System.out.println("bytes " + bytes.length);
+
             if(!process.waitFor(1, TimeUnit.SECONDS))
                 throw new TimeoutException("Process waitFor time has elapsed");
         } catch(IOException ex) {
@@ -68,7 +71,7 @@ class MacSysctlLaunchCommandService implements JLaunchCmdService {
         }
 
         System.out.println(pid);
-        System.out.println("All proc");
+        System.out.println("procAll " + procAll.limit());
         for(int offset = 0; offset < procAll.limit(); offset += SIZE_OF_KINFO_PROC) {
             int currPid = procAll.getInt(offset + KINFO_PROC_PID_OFFSET);
             System.out.println(currPid);
