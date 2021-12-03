@@ -14,15 +14,12 @@ if(JavaVersion.current().isJava9Compatible) {
     val moduleSourceSet = sourceSets.register("module")
     configurations.named("moduleCompileClasspath") { extendsFrom(configurations.compileClasspath.get()) }
     configurations.named("moduleRuntimeClasspath") { extendsFrom(configurations.runtimeClasspath.get()) }
-    val compileModuleInfo = tasks.register<JavaCompile>("compileModuleInfo") {
+
+    moduleSourceSet.configure { java.srcDirs(sourceSets.named("main").map { it.java.srcDirs }) }
+    val compileModuleInfo = tasks.named<JavaCompile>(moduleSourceSet.map { it.compileJavaTaskName }.get()) {
         sourceCompatibility = JavaVersion.VERSION_1_9.toString()
         targetCompatibility = JavaVersion.VERSION_1_9.toString()
 
-        source(moduleSourceSet.map { it.java })
-        source(tasks.compileJava.map { it.source })
-
-        classpath = project.files(moduleSourceSet.map { it.compileClasspath })
-        destinationDirectory.set(moduleSourceSet.map { it.java.destinationDirectory }.map { it.get() })
         modularity.inferModulePath.set(true)
     }
 
