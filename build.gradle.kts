@@ -25,11 +25,12 @@ if(JavaVersion.current().isJava9Compatible) {
 
     val copyModuleInfo = tasks.register<Copy>("copyModuleInfo") {
         from(compileModuleInfo.map { it.destinationDirectory.file("module-info.class").get() })
-        into(tasks.compileJava.map { it.destinationDirectory.get() })
+        into(tasks.compileJava.map { it.destinationDirectory.dir("META-INF/versions/9/").get() })
     }
 
     tasks.compileJava { finalizedBy(copyModuleInfo) }
     tasks.classes { dependsOn(copyModuleInfo) }
+    tasks.jar { manifest.attributes("Multi-Release" to "true") }
 }
 
 tasks.withType<JavaCompile> {
