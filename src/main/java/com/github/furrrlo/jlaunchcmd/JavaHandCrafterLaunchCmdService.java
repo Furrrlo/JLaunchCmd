@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class JavaHandCrafterLaunchCmdService implements JLaunchCmdService {
+class JavaHandCrafterLaunchCmdService implements JLaunchCmdService {
 
     static class Provider implements JLaunchCmdService.Provider {
 
