@@ -1,242 +1,32 @@
 name: Test
 on: [push]
 jobs:
-  test-java8-windows:
-    runs-on: windows-latest
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        jdk: [8, 11]
+        jna: [true, false]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 8
+      - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '8'
+          java-version: ${{ matrix.jdk }}
           distribution: 'adopt'
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+      - name: Run Gradle tests with JNA
+        if: ${{ matrix.jna }}
+        run: ./gradlew test -PnoJnaInTests
       - name: Run Gradle tests
+        if: ${{ !matrix.jna }}
         run: ./gradlew test -PnoJnaInTests
       - name: Upload test report
         uses: actions/upload-artifact@v2
         if: ${{ always() }}
         with:
-          name: windows-java8-test-report
-          path: build/reports
-
-  test-java8-jna-windows:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 8
-        uses: actions/setup-java@v2
-        with:
-          java-version: '8'
-          distribution: 'adopt'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
-      - name: Run Gradle tests
-        run: ./gradlew test
-      - name: Upload test report
-        uses: actions/upload-artifact@v2
-        if: ${{ always() }}
-        with:
-          name: windows-java8-jna-test-report
-          path: build/reports
-
-  test-java11-windows:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
-      - name: Run Gradle tests
-        run: ./gradlew test -PnoJnaInTests
-      - name: Upload test report
-        uses: actions/upload-artifact@v2
-        if: ${{ always() }}
-        with:
-          name: windows-java11-test-report
-          path: build/reports
-
-  test-java11-jna-windows:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
-      - name: Run Gradle tests
-        run: ./gradlew test
-      - name: Upload test report
-        uses: actions/upload-artifact@v2
-        if: ${{ always() }}
-        with:
-          name: windows-java11-jna-test-report
-          path: build/reports
-
-  test-java8-macos:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 8
-        uses: actions/setup-java@v2
-        with:
-          java-version: '8'
-          distribution: 'adopt'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
-      - name: Run Gradle tests
-        run: ./gradlew test -PnoJnaInTests
-      - name: Upload test report
-        uses: actions/upload-artifact@v2
-        if: ${{ always() }}
-        with:
-          name: macos-java8-test-report
-          path: build/reports
-
-  test-java8-jna-macos:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 8
-        uses: actions/setup-java@v2
-        with:
-          java-version: '8'
-          distribution: 'adopt'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
-      - name: Run Gradle tests
-        run: ./gradlew test
-      - name: Upload test report
-        uses: actions/upload-artifact@v2
-        if: ${{ always() }}
-        with:
-          name: macos-java8-jna-test-report
-          path: build/reports
-
-  test-java11-macos:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
-      - name: Run Gradle tests
-        run: ./gradlew test -PnoJnaInTests
-      - name: Upload test report
-        uses: actions/upload-artifact@v2
-        if: ${{ always() }}
-        with:
-          name: macos-java11-test-report
-          path: build/reports
-
-  test-java11-jna-macos:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
-      - name: Run Gradle tests
-        run: ./gradlew test
-      - name: Upload test report
-        uses: actions/upload-artifact@v2
-        if: ${{ always() }}
-        with:
-          name: macos-java11-jna-test-report
-          path: build/reports
-
-  test-java8-ubuntu:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 8
-        uses: actions/setup-java@v2
-        with:
-          java-version: '8'
-          distribution: 'adopt'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
-      - name: Run Gradle tests
-        run: ./gradlew test -PnoJnaInTests
-      - name: Upload test report
-        uses: actions/upload-artifact@v2
-        if: ${{ always() }}
-        with:
-          name: ubuntu-java8-test-report
-          path: build/reports
-
-  test-java8-jna-ubuntu:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 8
-        uses: actions/setup-java@v2
-        with:
-          java-version: '8'
-          distribution: 'adopt'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
-      - name: Run Gradle tests
-        run: ./gradlew test
-      - name: Upload test report
-        uses: actions/upload-artifact@v2
-        if: ${{ always() }}
-        with:
-          name: ubuntu-java8-jna-test-report
-          path: build/reports
-
-  test-java11-ubuntu:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
-      - name: Run Gradle tests
-        run: ./gradlew test -PnoJnaInTests
-      - name: Upload test report
-        uses: actions/upload-artifact@v2
-        if: ${{ always() }}
-        with:
-          name: ubuntu-java11-test-report
-          path: build/reports
-
-  test-java11-jna-ubuntu:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
-      - name: Run Gradle tests
-        run: ./gradlew test
-      - name: Upload test report
-        uses: actions/upload-artifact@v2
-        if: ${{ always() }}
-        with:
-          name: ubuntu-java11-jna-test-report
+          name: ${{ matrix.os }}-java${{ matrix.jdk }}-test-report
           path: build/reports
