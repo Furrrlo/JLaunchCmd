@@ -1,5 +1,6 @@
 plugins {
     `java-library`
+    `maven-publish`
 }
 
 group = "com.github.furrrlo"
@@ -60,4 +61,12 @@ dependencies {
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
     systemProperty("junit.jna", !project.hasProperty("noJnaInTests"))
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
 }
