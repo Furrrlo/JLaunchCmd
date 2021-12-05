@@ -36,6 +36,11 @@ class WinWmicLaunchCmdService implements JLaunchCmdService {
 
     @Override
     public String[] tryGetLaunchCommand() throws Exception {
+        return commandLineSplitter.splitCommand(tryGetShellLaunchCommand());
+    }
+
+    @Override
+    public String tryGetShellLaunchCommand() throws Exception {
         final long pid = pidProvider.getPid();
 
         final String output;
@@ -57,7 +62,6 @@ class WinWmicLaunchCmdService implements JLaunchCmdService {
             throw new IOException("wmic.exe not available", ex);
         }
 
-        final String launchCmd = output.substring("CommandLine".length()).trim();
-        return commandLineSplitter.splitCommand(launchCmd);
+        return output.substring("CommandLine".length()).trim();
     }
 }

@@ -38,6 +38,17 @@ public interface JLaunchCmd {
 
     String[] getLaunchCommand();
 
+    /**
+     * Return the command used to launch this process properly escaped so that it can be run in a shell.
+     *
+     * This command is only guaranteed to work properly on Windows (where it should be used the most because of the
+     * parameters requested by functions such as ShellExecute, etc), while on other OSes it will return
+     * a best effort attempt.
+     *
+     * @return command used to launch this process
+     */
+    String getShellLaunchCommand();
+
     String getExecutable();
 
     String[] getArguments();

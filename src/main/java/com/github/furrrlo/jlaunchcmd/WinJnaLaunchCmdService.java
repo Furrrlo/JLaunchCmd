@@ -48,11 +48,16 @@ class WinJnaLaunchCmdService implements JLaunchCmdService {
 
     @Override
     public String[] tryGetLaunchCommand() throws Exception {
+        return commandLineSplitter.splitCommand(tryGetShellLaunchCommand());
+    }
+
+    @Override
+    public String tryGetShellLaunchCommand() throws Exception {
         final Pointer commandLinePtr = Kernel32.INSTANCE.GetCommandLine();
         final String commandLine = W32APITypeMapper.DEFAULT == W32APITypeMapper.UNICODE ?
                 commandLinePtr.getWideString(0) :
                 commandLinePtr.getString(0);
-        return commandLineSplitter.splitCommand(commandLine);
+        return commandLine;
     }
 
     private interface Kernel32 extends com.sun.jna.platform.win32.Kernel32 {

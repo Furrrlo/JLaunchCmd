@@ -37,6 +37,26 @@ class JLaunchCmdImpl implements JLaunchCmd {
     }
 
     @Override
+    public String getShellLaunchCommand() {
+        final List<Throwable> exceptions = new ArrayList<>();
+
+        for(JLaunchCmdService service : services) {
+            try {
+                return service.tryGetShellLaunchCommand();
+            } catch (Exception ex) {
+                if(LOGGER.isLoggable(Level.FINE))
+                    LOGGER.log(Level.FINE, "Service " + service + " failed", ex);
+
+                exceptions.add(ex);
+            }
+        }
+
+        final RuntimeException ex = new RuntimeException();
+        exceptions.forEach(ex::addSuppressed);
+        throw ex;
+    }
+
+    @Override
     public String getExecutable() {
         final List<Throwable> exceptions = new ArrayList<>();
 

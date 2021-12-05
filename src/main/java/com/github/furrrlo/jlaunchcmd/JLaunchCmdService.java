@@ -4,6 +4,10 @@ public interface JLaunchCmdService {
 
     String[] tryGetLaunchCommand() throws Exception;
 
+    default String tryGetShellLaunchCommand() throws Exception {
+        return String.join(" ", tryGetLaunchCommand());
+    }
+
     default String tryGetExecutable() throws Exception {
         return tryGetLaunchCommand()[0];
     }
