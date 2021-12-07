@@ -38,7 +38,7 @@ dependencies {
 ## Usage
 
 ```java
-import com.github.furrrlo.jlaunchcmd.JLaunchCmd;
+import io.github.furrrlo.jlaunchcmd.JLaunchCmd;
 
 import java.util.Arrays;
 

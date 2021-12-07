@@ -3,7 +3,7 @@ plugins {
     `maven-publish`
 }
 
-group = "com.github.furrrlo"
+group = "io.github.furrrlo"
 version = "1.0-SNAPSHOT"
 
 java {

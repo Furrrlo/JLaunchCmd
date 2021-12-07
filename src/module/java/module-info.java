@@ -1,6 +1,6 @@
 module jlaunchcmd {
-    exports com.github.furrrlo.jlaunchcmd;
-    uses com.github.furrrlo.jlaunchcmd.JLaunchCmdService.Provider;
+    exports io.github.furrrlo.jlaunchcmd;
+    uses io.github.furrrlo.jlaunchcmd.JLaunchCmdService.Provider;
 
     requires java.logging;
     requires java.management;
