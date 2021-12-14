@@ -1,5 +1,6 @@
 package io.github.furrrlo.jlaunchcmd;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,6 +30,11 @@ class JLaunchCmdImpl implements JLaunchCmd {
     @Override
     public String getExecutable() {
         return tryForEachService(JLaunchCmdService::tryGetExecutable);
+    }
+
+    @Override
+    public Path getExecutablePath() {
+        return tryForEachService(JLaunchCmdService::tryGetExecutablePath);
     }
 
     @Override

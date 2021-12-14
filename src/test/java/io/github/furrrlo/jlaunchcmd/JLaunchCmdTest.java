@@ -4,7 +4,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Path;
 import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class JLaunchCmdTest {
 
@@ -22,6 +25,13 @@ class JLaunchCmdTest {
     @Test
     void getExecutable() {
         System.out.println(Assertions.assertDoesNotThrow(() -> JLaunchCmd.create().getExecutable()));
+    }
+
+    @Test
+    void getExecutablePath() {
+        final Path path = Assertions.assertDoesNotThrow(() -> JLaunchCmd.create().getExecutablePath());
+        System.out.println(path.toString());
+        assertTrue(path.isAbsolute());
     }
 
     @Test

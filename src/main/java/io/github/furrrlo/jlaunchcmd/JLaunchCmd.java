@@ -1,5 +1,6 @@
 package io.github.furrrlo.jlaunchcmd;
 
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.stream.Collectors;
@@ -50,6 +51,13 @@ public interface JLaunchCmd {
     String getShellLaunchCommand();
 
     String getExecutable();
+
+    /**
+     * Return the absolute path of the executable used to launch this process
+     *
+     * @return absolute path of the executable used to launch this process
+     */
+    Path getExecutablePath();
 
     String[] getArguments();
 }
