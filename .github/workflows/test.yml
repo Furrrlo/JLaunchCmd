@@ -28,5 +28,5 @@ jobs:
         uses: actions/upload-artifact@v2
         if: ${{ always() }}
         with:
-          name: ${{ matrix.os }}-java${{ matrix.jdk }}-test-report
+          name: ${{ matrix.os }}-java${{ matrix.jdk }}${{ matrix.jna && '-jna' || '' }}-test-report
           path: build/reports
