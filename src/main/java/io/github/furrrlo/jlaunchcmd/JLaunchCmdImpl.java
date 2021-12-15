@@ -2,10 +2,13 @@ package io.github.furrrlo.jlaunchcmd;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class JLaunchCmdImpl implements JLaunchCmd {
 
@@ -15,6 +18,15 @@ class JLaunchCmdImpl implements JLaunchCmd {
 
     JLaunchCmdImpl(Collection<JLaunchCmdService> services) {
         this.services = services;
+    }
+
+    @Override
+    public ProcessBuilder restartProcessBuilder() {
+        return new ProcessBuilder(Stream.concat(
+                // Use the absolute path to make sure it works even if the current working dir was changed (somehow)
+                Stream.of(getExecutablePath().toAbsolutePath().toString()),
+                Arrays.stream(getArguments())
+        ).collect(Collectors.toList()));
     }
 
     @Override

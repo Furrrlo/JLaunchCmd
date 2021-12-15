@@ -37,6 +37,8 @@ public interface JLaunchCmd {
                 .collect(Collectors.toList()));
     }
 
+    ProcessBuilder restartProcessBuilder();
+
     String[] getLaunchCommand();
 
     /**
