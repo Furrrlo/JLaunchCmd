@@ -3,6 +3,8 @@ package io.github.furrrlo.jlaunchcmd;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 class NixProcSelfLaunchCmdService implements JLaunchCmdService {
 
@@ -28,5 +30,10 @@ class NixProcSelfLaunchCmdService implements JLaunchCmdService {
         } catch(IOException ex) {
             throw new IOException("/proc/self/cmdline not available", ex);
         }
+    }
+
+    @Override
+    public Path tryGetExecutablePath() throws Exception {
+        return Paths.get("/proc/self/exe").toRealPath();
     }
 }

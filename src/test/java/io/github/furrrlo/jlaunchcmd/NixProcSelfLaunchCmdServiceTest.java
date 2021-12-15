@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,4 +29,17 @@ class NixProcSelfLaunchCmdServiceTest {
                 String.format("Command line differs (\nexpected:\t%s, \nactual:\t\t%s\n)", Arrays.toString(expected), Arrays.toString(actual)));
     }
 
+    @Test
+    @EnabledOnOs({ OS.LINUX })
+    void exePathSameAsJavaProcessHandle() throws Exception {
+        final Path expected;
+        try {
+            expected = new JavaProcessHandleLaunchCmdService().tryGetExecutablePath();
+        } catch (Throwable t) {
+            assumeTrue(false, "Failed to get commandLine from Java ProcessHandle API");
+            return;
+        }
+
+        assertEquals(expected, new NixProcSelfLaunchCmdService().tryGetExecutablePath());
+    }
 }
