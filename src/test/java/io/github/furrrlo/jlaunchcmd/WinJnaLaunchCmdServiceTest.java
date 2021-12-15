@@ -20,6 +20,12 @@ class WinJnaLaunchCmdServiceTest {
         final JLaunchCmdService service = provider.create();
         assertNotNull(service, "Service is null");
 
-        assertDoesNotThrow(service::tryGetLaunchCommand, "Service throws exception");
+        assertAll(
+                () -> assertDoesNotThrow(service::tryGetLaunchCommand, "Service#tryGetLaunchCommand throws exception"),
+                () -> assertTrue(assertDoesNotThrow(
+                                service::tryGetExecutablePath,
+                                "Service#tryGetExecutablePath throws exception").isAbsolute(),
+                        "tryGetExecutablePath is not absolute"))
+        ;
     }
 }
