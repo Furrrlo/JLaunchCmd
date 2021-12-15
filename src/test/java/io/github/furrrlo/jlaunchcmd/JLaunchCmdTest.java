@@ -4,9 +4,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.concurrent.TimeoutException;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class JLaunchCmdTest {
@@ -31,7 +35,15 @@ class JLaunchCmdTest {
     void getExecutablePath() {
         final Path path = Assertions.assertDoesNotThrow(() -> JLaunchCmd.create().getExecutablePath());
         System.out.println(path.toString());
-        assertTrue(path.isAbsolute());
+    }
+
+    @Test
+    void isExecutablePathAbsolute() throws IOException, InterruptedException, TimeoutException {
+        final String res = RunTestBinary.runWithRelativeExecutablePath(ExecutablePathMain.class.getName());
+        assertTrue(assertDoesNotThrow(
+                () -> Paths.get(res),
+                res + " is not a path"
+        ).isAbsolute(), res + " is not absolute");
     }
 
     @Test

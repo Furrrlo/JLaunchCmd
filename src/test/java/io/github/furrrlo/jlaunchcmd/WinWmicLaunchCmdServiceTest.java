@@ -4,8 +4,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
+import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -44,5 +47,17 @@ class WinWmicLaunchCmdServiceTest {
                 expected,
                 new WinWmicLaunchCmdService().tryGetExecutablePath(),
                 "Different executable path");
+    }
+
+    @Test
+    @EnabledOnOs({ OS.WINDOWS })
+    void isExecutablePathAbsolute() throws IOException, InterruptedException, TimeoutException {
+        final String res = RunTestBinary.runWithRelativeExecutablePath(
+                ExecutablePathMain.class.getName(),
+                WinWmicLaunchCmdService.Provider.class.getName());
+        assertTrue(assertDoesNotThrow(
+                () -> Paths.get(res),
+                res + " is not a path"
+        ).isAbsolute(), res + " is not absolute");
     }
 }
