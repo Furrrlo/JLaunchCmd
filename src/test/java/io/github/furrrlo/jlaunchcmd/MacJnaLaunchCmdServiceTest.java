@@ -27,7 +27,9 @@ class MacJnaLaunchCmdServiceTest {
 
     @Test
     @EnabledOnOs({ OS.MAC })
-    void sameAsJavaProcessHandle() {
+    void sameAsJavaProcessHandle() throws Exception {
+        assumeTrue(Boolean.getBoolean("junit.jna"), "Missing JNA");
+
         final String[] expected, actual;
         try {
             expected = new JavaProcessHandleLaunchCmdService().tryGetLaunchCommand();
@@ -36,16 +38,9 @@ class MacJnaLaunchCmdServiceTest {
             return;
         }
 
-        try {
-            actual = new MacJnaLaunchCmdService().tryGetLaunchCommand();
-        } catch (Throwable t) {
-            assumeTrue(false, "Failed to get commandLine from MacOs sysctl");
-            return;
-        }
-
         assertArrayEquals(
                 expected,
-                actual,
+                actual = new MacJnaLaunchCmdService().tryGetLaunchCommand(),
                 String.format("Command line differs (\nexpected:\t%s, \nactual:\t\t%s\n)", Arrays.toString(expected), Arrays.toString(actual)));
     }
 }
