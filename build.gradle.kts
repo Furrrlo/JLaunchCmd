@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "io.github.furrrlo"
-version = "1.0" + releaseParams.snapshotSuffix
+version = "1.1" + releaseParams.snapshotSuffix
 description = "Small library which aims at resolving the command used to start the application"
 
 java {
