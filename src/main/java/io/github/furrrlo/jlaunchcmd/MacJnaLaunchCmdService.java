@@ -7,6 +7,9 @@ import com.sun.jna.Pointer;
 import com.sun.jna.platform.unix.LibCAPI;
 import com.sun.jna.ptr.IntByReference;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 class MacJnaLaunchCmdService implements JLaunchCmdService {
 
     static class Provider implements JLaunchCmdService.Provider {
@@ -71,6 +74,14 @@ class MacJnaLaunchCmdService implements JLaunchCmdService {
         }
 
         return cmd;
+    }
+
+    @Override
+    public Path tryGetExecutablePath() throws Exception {
+        Memory buff = new Memory(SystemB.PROC_PIDPATHINFO_MAXSIZE);
+        if(SystemB.INSTANCE.proc_pidpath((int) pidProvider.getPid(), buff, (int) buff.size()) <= 0)
+            throw perror("proc_pidpath(PROC_PIDPATHINFO_MAXSIZE) failed");
+        return Paths.get(buff.getString(0).trim());
     }
 
     private Memory getArgs() throws Exception {

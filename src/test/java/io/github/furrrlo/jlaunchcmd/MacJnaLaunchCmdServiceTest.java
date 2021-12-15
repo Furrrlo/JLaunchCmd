@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +23,13 @@ class MacJnaLaunchCmdServiceTest {
         final JLaunchCmdService service = provider.create();
         assertNotNull(service, "Service is null");
 
-        assertDoesNotThrow(service::tryGetLaunchCommand, "Service throws exception");
+        assertAll(
+                () -> assertDoesNotThrow(service::tryGetLaunchCommand, "Service#tryGetLaunchCommand throws exception"),
+                () -> assertTrue(assertDoesNotThrow(
+                                service::tryGetExecutablePath,
+                                "Service#tryGetExecutablePath throws exception").isAbsolute(),
+                        "tryGetExecutablePath is not absolute")
+        );
     }
 
     @Test
@@ -42,5 +49,21 @@ class MacJnaLaunchCmdServiceTest {
                 expected,
                 actual = new MacJnaLaunchCmdService().tryGetLaunchCommand(),
                 String.format("Command line differs (\nexpected:\t%s, \nactual:\t\t%s\n)", Arrays.toString(expected), Arrays.toString(actual)));
+    }
+
+    @Test
+    @EnabledOnOs({ OS.MAC })
+    void exePathSameAsJavaProcessHandle() throws Exception {
+        assumeTrue(Boolean.getBoolean("junit.jna"), "Missing JNA");
+
+        final Path expected;
+        try {
+            expected = new JavaProcessHandleLaunchCmdService().tryGetExecutablePath();
+        } catch (Throwable t) {
+            assumeTrue(false, "Failed to get commandLine from Java ProcessHandle API");
+            return;
+        }
+
+        assertEquals(expected, new MacJnaLaunchCmdService().tryGetExecutablePath());
     }
 }
