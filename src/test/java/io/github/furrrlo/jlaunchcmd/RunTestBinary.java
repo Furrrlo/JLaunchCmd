@@ -1,7 +1,5 @@
 package io.github.furrrlo.jlaunchcmd;
 
-import com.sun.jna.Platform;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,7 +16,7 @@ public class RunTestBinary {
     private static final Path TEST_BINARY = Paths.get(System.getProperty("junit.test.binary"));
     private static final Path JAVA_EXECUTABLE_PATH = Paths.get(System.getProperty("java.home"))
             .resolve("bin")
-            .resolve(Platform.isWindows() ? "java.exe" : "java");
+            .resolve(System.getProperty("os.name").toLowerCase().contains("win") ? "java.exe" : "java");
 
     public static String runWithAbsoluteExecutablePath(String mainClass, String... args) throws IOException, InterruptedException, TimeoutException {
         return doRun(new ProcessBuilder()
