@@ -20,7 +20,7 @@ jobs:
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Run Gradle tests with JNA
         if: ${{ matrix.jna }}
-        run: ./gradlew test -PnoJnaInTests
+        run: ./gradlew test
       - name: Run Gradle tests
         if: ${{ !matrix.jna }}
         run: ./gradlew test -PnoJnaInTests
