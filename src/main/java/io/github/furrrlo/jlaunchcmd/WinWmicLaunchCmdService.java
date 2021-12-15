@@ -3,6 +3,8 @@ package io.github.furrrlo.jlaunchcmd;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
@@ -41,12 +43,19 @@ class WinWmicLaunchCmdService implements JLaunchCmdService {
 
     @Override
     public String tryGetShellLaunchCommand() throws Exception {
-        final long pid = pidProvider.getPid();
+        return queryWmicParam(pidProvider.getPid(), "CommandLine");
+    }
 
+    @Override
+    public Path tryGetExecutablePath() throws Exception {
+        return Paths.get(queryWmicParam(pidProvider.getPid(), "ExecutablePath"));
+    }
+
+    private String queryWmicParam(long pid, String paramName) throws Exception {
         final String output;
         try {
             // See https://stackoverflow.com/a/14143925
-            final String cmd = "wmic.exe PROCESS where processid=" + pid + " get CommandLine";
+            final String cmd = "wmic.exe PROCESS where processid=" + pid + " get " + paramName;
             final Process process = Runtime.getRuntime().exec(cmd);
 
             output = new BufferedReader(new InputStreamReader(process.getInputStream()))
@@ -56,12 +65,12 @@ class WinWmicLaunchCmdService implements JLaunchCmdService {
             if(!process.waitFor(1, TimeUnit.SECONDS))
                 throw new TimeoutException("Process waitFor time has elapsed");
 
-            if(!output.toLowerCase().startsWith("commandline"))
+            if(!output.toLowerCase().startsWith(paramName.toLowerCase()))
                 throw new RuntimeException("Invalid wmic.exe output");
         } catch(IOException ex) {
             throw new IOException("wmic.exe not available", ex);
         }
 
-        return output.substring("CommandLine".length()).trim();
+        return output.substring(paramName.length()).trim();
     }
 }

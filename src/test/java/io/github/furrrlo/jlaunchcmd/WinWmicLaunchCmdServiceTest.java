@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,5 +27,22 @@ class WinWmicLaunchCmdServiceTest {
                 expected,
                 actual = new WinWmicLaunchCmdService().tryGetLaunchCommand(),
                 String.format("Command line differs (\nexpected:\t%s, \nactual:\t\t%s\n)", Arrays.toString(expected), Arrays.toString(actual)));
+    }
+
+    @Test
+    @EnabledOnOs({ OS.WINDOWS })
+    void exePathSameAsWin32() throws Exception {
+        final Path expected;
+        try {
+            expected = new WinJnaLaunchCmdService().tryGetExecutablePath();
+        } catch (Throwable t) {
+            assumeTrue(false, "Failed to get commandLine from Win32");
+            return;
+        }
+
+        assertEquals(
+                expected,
+                new WinWmicLaunchCmdService().tryGetExecutablePath(),
+                "Different executable path");
     }
 }
