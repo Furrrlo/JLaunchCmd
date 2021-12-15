@@ -1,4 +1,4 @@
-module jlaunchcmd {
+module io.github.furrrlo.jlaunchcmd {
     exports io.github.furrrlo.jlaunchcmd;
     uses io.github.furrrlo.jlaunchcmd.JLaunchCmdService.Provider;
 
