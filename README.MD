@@ -1,7 +1,7 @@
 # JLaunchCmd
 
 [![Build](https://img.shields.io/github/workflow/status/Furrrlo/JLaunchCmd/Test)](https://github.com/Furrrlo/JLaunchCmd/actions/workflows/test.yml)
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.furrrlo/jlaunchcmd)](https://search.maven.org/artifact/io.github.furrrlo/jlaunchcmd)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.furrrlo/JLaunchCmd)](https://search.maven.org/artifact/io.github.furrrlo/JLaunchCmd)
 
 Small library which aims at resolving the command used to start the application.
 
